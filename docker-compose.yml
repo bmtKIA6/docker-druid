@@ -1,0 +1,92 @@
+version: "2"
+services:
+  zookeeper:
+    restart: "unless-stopped"
+    image: "jplock/zookeeper"
+    networks:
+      - "druid"
+    hostname: "zookeeper"
+  mysql:
+    restart: "unless-stopped"
+    image: "mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: "druid"
+    volumes:
+      - "./init.sql:/docker-entrypoint-initdb.d/init.sql"
+      - "metadata:/var/lib/mysql"
+    networks:
+      - "druid"
+    hostname: "mysql"
+  coordinator:
+    restart: "unless-stopped"
+    build:
+      context: "."
+      dockerfile: "coordinator.dockerfile"
+    volumes:
+      - "./druid-0.9.0:/opt/druid"
+    networks:
+      - "druid"
+    hostname: "coordinator"
+    depends_on:
+      - "zookeeper"
+      - "mysql"
+  overlord:
+    restart: "unless-stopped"
+    build:
+      context: "."
+      dockerfile: "overlord.dockerfile"
+    volumes:
+      - "./druid-0.9.0:/opt/druid"
+    networks:
+      - "druid"
+    hostname: "overlord"
+    depends_on:
+      - "zookeeper"
+      - "mysql"
+  historical:
+    restart: "unless-stopped"
+    build:
+      context: "."
+      dockerfile: "historical.dockerfile"
+    volumes:
+      - "./druid-0.9.0:/opt/druid"
+    networks:
+      - "druid"
+    hostname: "historical"
+    depends_on:
+      - "zookeeper"
+      - "mysql"
+  middle_manager:
+    restart: "unless-stopped"
+    build:
+      context: "."
+      dockerfile: "middle_manager.dockerfile"
+    volumes:
+      - "./druid-0.9.0:/opt/druid"
+    networks:
+      - "druid"
+    hostname: "middle_manager"
+    depends_on:
+      - "zookeeper"
+      - "mysql"
+  broker:
+    restart: "unless-stopped"
+    build:
+      context: "."
+      dockerfile: "broker.dockerfile"
+    volumes:
+      - "./druid-0.9.0:/opt/druid"
+    networks:
+      - "druid"
+    hostname: "broker"
+    depends_on:
+      - "zookeeper"
+      - "mysql"
+volumes:
+  metadata:
+networks:
+  default:
+    external:
+      name: "local"
+  druid:
