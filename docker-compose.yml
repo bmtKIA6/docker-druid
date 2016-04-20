@@ -24,7 +24,7 @@ services:
       context: "."
       dockerfile: "coordinator.dockerfile"
     volumes:
-      - "./druid-0.9.0:/opt/druid"
+      - "./druid:/opt/druid"
     networks:
       - "druid"
     hostname: "coordinator"
@@ -37,7 +37,7 @@ services:
       context: "."
       dockerfile: "overlord.dockerfile"
     volumes:
-      - "./druid-0.9.0:/opt/druid"
+      - "./druid:/opt/druid"
     networks:
       - "druid"
     hostname: "overlord"
@@ -50,7 +50,7 @@ services:
       context: "."
       dockerfile: "historical.dockerfile"
     volumes:
-      - "./druid-0.9.0:/opt/druid"
+      - "./druid:/opt/druid"
     networks:
       - "druid"
     hostname: "historical"
@@ -63,7 +63,7 @@ services:
       context: "."
       dockerfile: "middle_manager.dockerfile"
     volumes:
-      - "./druid-0.9.0:/opt/druid"
+      - "./druid:/opt/druid"
     networks:
       - "druid"
     hostname: "middle_manager"
@@ -76,9 +76,10 @@ services:
       context: "."
       dockerfile: "broker.dockerfile"
     volumes:
-      - "./druid-0.9.0:/opt/druid"
+      - "./druid:/opt/druid"
     networks:
       - "druid"
+      - "default"
     hostname: "broker"
     depends_on:
       - "zookeeper"
