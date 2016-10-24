@@ -1,2 +1,4 @@
 druid/data
 druid/var
+!druid/data/.gitkeep
+!druid/var/.gitkeep

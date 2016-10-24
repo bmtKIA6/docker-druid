@@ -24,11 +24,13 @@ services:
       context: "."
       dockerfile: "coordinator.dockerfile"
     ports:
-      - 18081:8081
+      - "38081:8081"
     volumes:
       - "./druid:/opt/druid"
     networks:
       - "druid"
+    ports:
+      - "38081:8081"      
     hostname: "coordinator"
     depends_on:
       - "zookeeper"
@@ -41,7 +43,7 @@ services:
     volumes:
       - "./druid:/opt/druid"
     ports:
-      - 18090:8090     
+      - "38090:8090"    
     networks:
       - "druid"
     hostname: "overlord"
@@ -80,9 +82,11 @@ services:
       context: "."
       dockerfile: "broker.dockerfile"
     ports:
-      - 18082:8082
+      - 38082:8082
     volumes:
       - "./druid:/opt/druid"
+    ports:
+      - "38082:8082"
     networks:
       - "druid"
       - "default"

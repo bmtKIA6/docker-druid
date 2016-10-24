@@ -1,12 +1,11 @@
 {
-  "type" : "index",
+  "type" : "index_hadoop",
   "spec" : {
     "ioConfig" : {
-      "type" : "index",
-      "firehose" : {
-        "type" : "local",
-        "baseDir" : "/opt/druid/quickstart",
-        "filter": "wikiticker-2015-09-12-sampled.json"
+      "type" : "hadoop",
+      "inputSpec" : {
+        "type" : "static",
+        "paths" : "quickstart/wikiticker-2015-09-12-sampled.json"
       }
     },
     "dataSchema" : {
@@ -18,7 +17,7 @@
         "intervals" : ["2015-09-12/2015-09-13"]
       },
       "parser" : {
-        "type" : "string",
+        "type" : "hadoopyString",
         "parseSpec" : {
           "format" : "json",
           "dimensionsSpec" : {
@@ -73,6 +72,14 @@
           "fieldName" : "user"
         }
       ]
+    },
+    "tuningConfig" : {
+      "type" : "hadoop",
+      "partitionsSpec" : {
+        "type" : "hashed",
+        "targetPartitionSize" : 5000000
+      },
+      "jobProperties" : {}
     }
   }
 }
