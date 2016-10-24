@@ -23,6 +23,8 @@ services:
     build:
       context: "."
       dockerfile: "coordinator.dockerfile"
+    ports:
+      - 18081:8081
     volumes:
       - "./druid:/opt/druid"
     networks:
@@ -38,6 +40,8 @@ services:
       dockerfile: "overlord.dockerfile"
     volumes:
       - "./druid:/opt/druid"
+    ports:
+      - 18090:8090     
     networks:
       - "druid"
     hostname: "overlord"
@@ -75,6 +79,8 @@ services:
     build:
       context: "."
       dockerfile: "broker.dockerfile"
+    ports:
+      - 18082:8082
     volumes:
       - "./druid:/opt/druid"
     networks:

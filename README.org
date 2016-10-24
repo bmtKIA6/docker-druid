@@ -1,0 +1,220 @@
+* Running druid
+
+- need some tsv files
+ 
+
+
+#+BEGIN_SRC sh
+sh drui/bin/init
+#+END_SRC
+
+
+#+BEGIN_SRC js :target druid/data/some_job.json
+{
+  "type" : "index_hadoop",
+  "spec" : {
+    "ioConfig" : {
+      "type" : "hadoop",
+      "inputSpec" : {
+        "type" : "static",
+        "paths" : "/opt/druid/data/*.liveintent.prod.custom_aggregate_inexact_5.tsv"
+      }
+    },
+    "tuningConfig" : {
+      "type": "hadoop"       
+    },
+    "dataSchema" : {
+      "dataSource" : "custom_aggregate_inexact",
+      "parser" : {
+        "type" : "string",
+        "parseSpec" : {
+          "format" : "tsv",
+          "dimensionsSpec" : {
+            "dimensions" : [
+              "publisher_id",
+              "template_id",
+              "section_id",
+              "size",
+              "iab_flag",
+              "advertiser_id",
+              "campaign_id",
+              "creative_id",
+              "pricing_type",
+              "line_item_id",
+              "demand_type",
+              "region",
+              "metro",
+              "zip",
+              "list_id",
+              "browser",
+              "age",
+              "gender",
+              "rtb_domain",
+              "domain",
+              "country",
+              "device_type",
+              "device_maker",
+              "os",
+              "isp",
+              "gross_ecpm_bucket",
+              "net_ecpm_bucket",
+              "key_value_pairs"
+
+            ]
+          },
+          "timestampSpec" : {
+            "format" : "auto",
+            "column" : "event_date"
+          }, 
+          "delimiter" : "\t",
+          "columns" : [
+           "event_date",
+            "publisher_id",
+            "template_id",
+            "section_id",
+            "size",
+            "iab_flag",
+            "mail_type",
+            "advertiser_id",
+            "campaign_id",
+            "creative_id",
+            "pricing_type",
+            "line_item_id",
+            "demand_type",
+            "region",
+            "metro",
+            "zip",
+            "list_id",
+            "browser",
+            "age",
+            "gender",
+            "rtb_domain",
+            "domain",
+            "country",
+            "device_type",
+            "device_maker",
+            "os",
+            "isp",
+            "gross_ecpm_bucket",
+            "net_ecpm_bucket",
+            "key_value_pairs",
+            "opens",
+            "impressions",
+            "first_impressions",
+            "decisions",
+            "clicks",
+            "expected_clicks",
+            "conversions",
+            "expected_conversions",
+            "advertiser_spent",
+            "publisher_revenue",
+            "expected_payout",
+            "pvc",
+            "ssp_fee_due",
+            "dsp_fee_due",
+            "programmatic_fee_due",
+            "noads"
+          ]
+        }
+      },
+      "metricsSpec" : [
+        {
+          "name" : "opens",
+          "type" : "longSum",
+          "fieldName" : "impressions"
+        },
+        {
+          "name" : "impressions",
+          "type" : "longSum",
+          "fieldName" : "impressions"
+        },
+        {
+          "name" : "first_impressions",
+          "type" : "longSum",
+          "fieldName" : "first_impressions"
+        },
+        {
+          "name" : "decisions",
+          "type" : "longSum",
+          "fieldName" : "decisions"
+        },
+        {
+          "name" : "clicks",
+          "type" : "longSum",
+          "fieldName" : "clicks"
+        },        
+        {
+          "name" : "expected_clicks",
+          "type" : "doubleSum",
+          "fieldName" : "expected_clicks"
+        },
+        {
+          "name" : "conversions",
+          "type" : "longSum",
+          "fieldName" : "conversions"
+        },
+        {
+          "name" : "expected_conversions",
+          "type" : "doubleSum",
+          "fieldName" : "expected_conversions"
+        },        
+        {
+          "name" : "advertiser_spent",
+          "type" : "doubleSum",
+          "fieldName" : "advertiser_spent"
+        },
+        {
+          "name" : "publisher_revenue",
+          "type" : "doubleSum",
+          "fieldName" : "publisher_revenue"
+        },
+        {
+          "name" : "expected_payout",
+          "type" : "doubleSum",
+          "fieldName" : "expected_payout"
+        },
+        {
+          "name": "pvc",
+          "type": "doubleSum",
+          "fieldName" : "pvc"
+        },
+        {
+          "name" : "ssp_fee_due",
+          "type" : "doubleSum",
+          "fieldName" : "ssp_fee_due"
+        },
+        {
+          "name" : "dsp_fee_due",
+          "type" : "doubleSum",
+          "fieldName" : "dsp_fee_due"
+        },
+        {
+          "name" : "programmatic_fee_due",
+          "type" : "doubleSum",
+          "fieldName" : "programmatic_fee_due"
+        },
+        {
+          "name" : "noads",
+          "type" : "doubleSum",
+          "fieldName" : "noads"
+        }
+      ],
+      "granularitySpec" : {
+        "type" : "uniform",
+        "segmentGranularity" : "day",
+        "intervals" : ["2016-07-14/2016-07-22"]
+      }
+    }
+  }
+}
+
+
+
+
+#+END_SRC
+
+
+
+#+BEGIN_SRC sh
+curl -X 'POST' -H 'Content-Type:application/json' -d @some_job.json http://overlord:8090/druid/indexer/v1/task
+#+END_SRC
