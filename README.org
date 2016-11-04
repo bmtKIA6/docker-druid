@@ -1,8 +1,9 @@
 * Running druid
 
 - need some tsv files
- 
-
+- put files under druid/data folder
+- bring up druid
+- submit a job via curl
 
 #+BEGIN_SRC sh
 $ docker-compose up
