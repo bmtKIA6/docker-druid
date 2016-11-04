@@ -5,7 +5,7 @@
 
 
 #+BEGIN_SRC sh
-sh drui/bin/init
+$ docker-compose up
 #+END_SRC
 
 
